@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var moment = require('moment');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -11,12 +12,14 @@ io.on('connection', function(socket) {
 
 	socket.on('message', function(message) {
 		console.log('Message Recieved: ' + message.text);
+		message.timestamp = moment().valueOf();
 
 		io.emit('message', message);
 	});
 
 	socket.emit('message', {
-		text: 'Welcome to the Chat Application'
+		text: 'Welcome to the Chat Application',
+		timestamp : moment().valueOf()
 	});
 });
 
